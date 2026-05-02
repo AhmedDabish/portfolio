@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Ahmed Dabish | .NET Architect & AI Engineer</title>
+    <meta name="description" content="Full‑Stack .NET developer with honors degree, team leader at Armed Forces, 10K+ daily requests automation, AI integration expert.">
+    <meta name="theme-color" content="#0a0f1c">
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1c;
+            color: #eef2ff;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.2s ease;
+        }
+        body.light {
+            background-color: #f2f5fa;
+            color: #0a192f;
+        }
+        body.light .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+        }
+        body.light .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid #d1d9f0;
+        }
+        body.light .skill-badge {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        .glass-card {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            transition: all 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.7);
+            box-shadow: 0 25px 40px -18px rgba(0, 0, 0, 0.5);
+        }
+        .glass-nav {
+            background: rgba(10, 15, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(130deg, #3b82f6, #a855f7, #ec4899);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        .skill-badge {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.25s;
+        }
+        .skill-badge:hover {
+            background: #3b82f6;
+            color: white;
+            transform: scale(1.02);
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+        section, .container { position: relative; z-index: 2; }
+        .custom-cursor {
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, width 0.2s, height 0.2s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor-follower {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #3b82f6;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.12s linear;
+            opacity: 0.6;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+        .avatar-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .stat-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="glass-nav fixed w-full z-50 py-4 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-extrabold tracking-tight"><span class="text-blue-400">Ahmed</span><span class="text-white">Dabish</span></a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#about" class="hover:text-blue-400 transition">About</a>
+                <a href="#skills" class="hover:text-blue-400 transition">Skills</a>
+                <a href="#experience" class="hover:text-blue-400 transition">Experience</a>
+                <a href="#projects" class="hover:text-blue-400 transition">Projects</a>
+                <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
+                <button id="theme-toggle" class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition"><i class="fas fa-moon text-yellow-300 dark:inline hidden"></i><i class="fas fa-sun dark:hidden text-slate-200"></i></button>
+            </div>
+            <button id="mobile-btn" class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-lg mt-3 mx-4 rounded-2xl p-5 flex flex-col gap-4 text-center">
+            <a href="#about">About</a><a href="#skills">Skills</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+            <button id="mobile-theme-toggle" class="bg-slate-700 py-2 rounded-full">Toggle Theme</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section - صورة أكبر -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto px-6 z-10 text-center">
+            <div class="flex justify-center mb-6">
+                <div class="rounded-full border-4 border-blue-500 p-1 bg-gradient-to-tr from-blue-500 to-purple-600 shadow-2xl avatar-float">
+                    <!-- حجم الصورة: w-44 h-44 على الموبايل و w-56 h-56 على الديسكتوب -->
+                    <img src="https://avatars.githubusercontent.com/u/111189633?s=400&u=721369dbeea54b9449ffc50e572f507f05f9c9de&v=4" alt="Ahmed Dabish" class="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover">
+                </div>
+            </div>
+            <div class="inline-block px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm mb-5 backdrop-blur-sm">✨ AI-Powered .NET Full‑Stack Engineer</div>
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight">Ahmed <span class="gradient-text">Abdelaty Dabish</span></h1>
+            <div class="h-20 mt-4"><span id="typed-text" class="text-xl md:text-2xl text-gray-300 border-r-2 border-blue-400 pr-1"></span></div>
+            <p class="text-gray-400 max-w-2xl mx-auto mt-3">Architecting intelligent, high‑performance systems with ASP.NET Core, Angular, Clean Architecture & AI integration. 10K+ daily automation requests.</p>
+            <div class="flex flex-wrap justify-center gap-4 mt-10">
+                <a href="#contact" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center gap-2"><i class="fas fa-paper-plane"></i> Hire Me</a>
+                <a href="https://drive.google.com/file/d/11bWTZs_28DtG-6DDSxvETuKDxjAsWnqO/view" target="_blank" class="px-8 py-3 border border-gray-600 hover:border-blue-500 rounded-full transition-all hover:bg-blue-500/10 flex gap-2"><i class="fas fa-download"></i> CV</a>
+                <a href="https://github.com/AhmedDabish" target="_blank" class="px-8 py-3 border border-gray-600 hover:border-blue-500 rounded-full transition-all flex gap-2"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+            <div class="flex justify-center gap-6 mt-12 text-2xl text-gray-400">
+                <a href="https://www.linkedin.com/in/Ahmed-Dabish" target="_blank" class="hover:text-blue-400 transition"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/AhmedDabish" target="_blank" class="hover:text-white transition"><i class="fab fa-github"></i></a>
+                <a href="mailto:ahmeddabish99@gmail.com" class="hover:text-red-400 transition"><i class="fas fa-envelope"></i></a>
+                <a href="https://wa.me/201001415548" target="_blank" class="hover:text-green-400 transition"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-500"><i class="fas fa-chevron-down"></i></div>
+    </section>
+
+    <!-- About Section - صورة أكبر -->
+    <section id="about" class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto glass-card p-8 md:p-12">
+                <div class="grid md:grid-cols-3 gap-8 items-center">
+                    <div class="flex justify-center">
+                        <div class="w-56 h-56 rounded-full overflow-hidden border-4 border-blue-500 shadow-xl">
+                            <img src="https://avatars.githubusercontent.com/u/111189633?s=400&u=721369dbeea54b9449ffc50e572f507f05f9c9de&v=4" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4"><h2 class="text-3xl font-bold">About <span class="gradient-text">Me</span></h2><p class="text-gray-300 leading-relaxed">Full‑Stack .NET Developer, <strong class="text-blue-400">honors graduate (GPA 3.47/4.00)</strong> from Kafr El‑Sheikh University. Team Leader at Armed Forces, delivering <strong>8 WhatsApp bots handling 10,000+ daily requests</strong>. Expert in ASP.NET Core, Clean Architecture, Angular, and AI integration (OpenAI, Hugging Face, Computer Vision). Military service ✅ completed, ready to relocate globally.</p><div class="flex flex-wrap gap-2"><span class="skill-badge"><i class="fas fa-map-marker-alt mr-1"></i> Kafr El‑Sheikh / worldwide</span><span class="skill-badge"><i class="fas fa-phone-alt"></i> +201001415548</span><span class="skill-badge"><i class="fas fa-medal"></i> Military: Completed</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Row -->
+    <div class="container mx-auto px-6 mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="glass-card p-6 transition-all hover:scale-105"><div class="stat-number">8+</div><p class="text-sm text-gray-400">Production Bots</p></div>
+            <div class="glass-card p-6 transition-all hover:scale-105"><div class="stat-number">10K+</div><p class="text-sm text-gray-400">Daily Requests</p></div>
+            <div class="glass-card p-6 transition-all hover:scale-105"><div class="stat-number">3+</div><p class="text-sm text-gray-400">Years of Experience</p></div>
+            <div class="glass-card p-6 transition-all hover:scale-105"><div class="stat-number">12+</div><p class="text-sm text-gray-400">Completed Projects</p></div>
+        </div>
+    </div>
+
+    <!-- Skills Section (بدون Progress Bars) -->
+    <section id="skills" class="py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">Core <span class="gradient-text">Competencies</span></h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-6 hover:rotate-1 transition"><i class="fas fa-cube text-4xl text-blue-400 mb-3"></i><h3 class="text-2xl font-semibold">Backend</h3><div class="flex flex-wrap gap-2 mt-4"><span class="skill-badge">ASP.NET Core</span><span class="skill-badge">Web API</span><span class="skill-badge">C#</span><span class="skill-badge">SignalR</span><span class="skill-badge">JWT</span><span class="skill-badge">Clean Arch</span></div></div>
+                <div class="glass-card p-6"><i class="fas fa-desktop text-4xl text-blue-400 mb-3"></i><h3 class="text-2xl font-semibold">Frontend</h3><div class="flex flex-wrap gap-2 mt-4"><span class="skill-badge">Angular</span><span class="skill-badge">TypeScript</span><span class="skill-badge">Bootstrap</span><span class="skill-badge">Tailwind</span><span class="skill-badge">HTML5/CSS3</span></div></div>
+                <div class="glass-card p-6"><i class="fas fa-brain text-4xl text-blue-400 mb-3"></i><h3 class="text-2xl font-semibold">AI & Automation</h3><div class="flex flex-wrap gap-2 mt-4"><span class="skill-badge">OpenAI API</span><span class="skill-badge">Hugging Face</span><span class="skill-badge">Selenium</span><span class="skill-badge">Python</span><span class="skill-badge">Computer Vision</span></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-16 bg-slate-900/20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">Experience & <span class="gradient-text">Leadership</span></h2>
+            <div class="max-w-4xl mx-auto space-y-8">
+                <div class="glass-card p-6 border-l-4 border-blue-500 transition-all hover:translate-x-2"><div class="flex flex-wrap justify-between"><h3 class="text-2xl font-bold">Team Leader, Full-Stack Developer</h3><span class="text-gray-400">2024 – 2025</span></div><p class="text-blue-400 mb-2">Armed Forces – Electronic Center for Recruitment</p><ul class="list-disc list-inside text-gray-300"><li>Led 4 devs, delivered 3 MVC + 1 WinForms enterprise apps.</li><li>Built 8 WhatsApp bots managing 10K+ daily requests via Selenium.</li><li>Automation scripts saved 60% manual work.</li></ul></div>
+                <div class="glass-card p-6 border-l-4 border-blue-500 transition-all hover:translate-x-2"><div class="flex flex-wrap justify-between"><h3 class="text-2xl font-bold">AI Freelance Project</h3><span class="text-gray-400">2024 – 2025</span></div><p class="text-blue-400">LinkedIn Job Assistant (.NET 8, WPF MVVM, OpenAI, Selenium)</p><ul class="list-disc list-inside text-gray-300"><li>AI-powered desktop app auto-applies to jobs, matches CV with JD.</li><li>Secure multi‑account AES encryption.</li></ul></div>
+                <div class="glass-card p-6"><h3 class="text-xl font-bold">Full Stack .Net Intern (ITI Tanta)</h3><p class="text-blue-400">Jan 2026 – Jun 2026</p><p class="text-gray-300">ASP.NET Core, EF Core, Angular, Clean Architecture, JWT, Docker, GenAI.</p></div>
+                <div class="glass-card p-6"><h3 class="text-xl font-bold">Backend Development Intern (ITI)</h3><p class="text-blue-400">Summer Code Camp 2023</p><p class="text-gray-300">ASP.NET Core MVC, Web API, SQL Server, layered architecture.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">Selected <span class="gradient-text">Projects</span></h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-card overflow-hidden group transition-all hover:scale-[1.02]"><div class="h-44 bg-gradient-to-r from-sky-900 to-indigo-900 flex items-center justify-center"><i class="fas fa-robot text-6xl text-white/70"></i></div><div class="p-6"><h3 class="text-xl font-bold">AI Chat Hub MVC</h3><p class="text-gray-400 text-sm">Multi‑LLM (OpenAI, Groq, Hugging Face) with streaming and role UI.</p><div class="flex flex-wrap gap-2 mt-3"><span class="skill-badge">.NET Core</span><span class="skill-badge">OpenAI</span></div><a href="https://github.com/AhmedDabish/AI-Chat-Hub-MVC" target="_blank" class="inline-block mt-4 text-blue-400 text-sm hover:underline">Repository →</a></div></div>
+                <div class="glass-card overflow-hidden group"><div class="h-44 bg-gradient-to-r from-teal-900 to-emerald-900 flex items-center justify-center"><i class="fas fa-hotel text-6xl"></i></div><div class="p-6"><h3 class="text-xl font-bold">Hotel Management System</h3><p class="text-gray-400 text-sm">WinForms + SQL Server, full CRUD, booking & client tracking.</p><div class="flex gap-2 mt-3"><span class="skill-badge">C#</span><span class="skill-badge">SQL</span></div><a href="https://github.com/AhmedDabish/Hotel_Management_System" target="_blank" class="inline-block mt-4 text-blue-400 text-sm hover:underline">Repository →</a></div></div>
+                <div class="glass-card overflow-hidden group"><div class="h-44 bg-gradient-to-r from-rose-900 to-orange-900 flex items-center justify-center"><i class="fas fa-camera-retro text-6xl"></i></div><div class="p-6"><h3 class="text-xl font-bold">Face Recognition Attendance</h3><p class="text-gray-400 text-sm">OpenCV + deep learning for automated attendance marking.</p><div class="flex gap-2 mt-3"><span class="skill-badge">Python</span><span class="skill-badge">OpenCV</span></div><a href="https://github.com/AhmedDabish/Attendance-System" target="_blank" class="inline-block mt-4 text-blue-400 text-sm hover:underline">Repository →</a></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-24 bg-slate-900/20">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto glass-card p-8 md:p-12">
+                <h2 class="text-3xl font-bold text-center mb-8">Get in <span class="gradient-text">Touch</span></h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div><h3 class="text-xl font-semibold mb-4"><i class="fas fa-comment-dots text-blue-400 mr-2"></i> Direct Contact</h3><div class="space-y-3"><p><i class="fas fa-phone-alt w-6 text-blue-400"></i> +201001415548</p><p><i class="fas fa-envelope w-6 text-blue-400"></i> ahmeddabish99@gmail.com</p><p><i class="fas fa-map-marker-alt w-6 text-blue-400"></i> Kafr El‑Sheikh (open to relocate)</p><div class="flex gap-4 text-2xl pt-4"><a href="https://linkedin.com/in/Ahmed-Dabish" class="hover:text-blue-400"><i class="fab fa-linkedin"></i></a><a href="https://github.com/AhmedDabish" class="hover:text-white"><i class="fab fa-github"></i></a><a href="https://wa.me/201001415548" class="hover:text-green-400"><i class="fab fa-whatsapp"></i></a></div></div></div>
+                    <div><h3 class="text-xl font-semibold mb-4"><i class="fab fa-github text-blue-400 mr-2"></i> GitHub Activity</h3><div class="flex justify-center"><img src="https://github-readme-stats.vercel.app/api?username=AhmedDabish&show_icons=true&theme=tokyonight&hide_border=true" class="rounded-xl w-full"></div></div>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 text-sm mt-8">© 2026 Ahmed Abdelaty Dabish — Built with <i class="fas fa-heart text-red-400"></i> advanced animations</div>
+        </div>
+    </section>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorFollower = document.querySelector('.custom-cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorFollower.style.left = e.clientX + 'px';
+            cursorFollower.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+                cursorFollower.style.transform = 'scale(1.5)';
+                cursorFollower.style.borderColor = '#a855f7';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursorFollower.style.transform = 'scale(1)';
+                cursorFollower.style.borderColor = '#3b82f6';
+            });
+        });
+
+        // Typewriter effect (smoother)
+        const roles = [".NET Full-Stack Architect", "AI Integration Specialist", "Clean Architecture Expert", "10K+ Automation Bots"];
+        let idx = 0, charPos = 0;
+        const typedSpan = document.getElementById("typed-text");
+        function typeWriter() {
+            if (charPos < roles[idx].length) {
+                typedSpan.textContent += roles[idx].charAt(charPos);
+                charPos++;
+                setTimeout(typeWriter, 65);
+            } else {
+                setTimeout(eraseText, 2100);
+            }
+        }
+        function eraseText() {
+            if (charPos > 0) {
+                typedSpan.textContent = roles[idx].substring(0, charPos-1);
+                charPos--;
+                setTimeout(eraseText, 30);
+            } else {
+                idx = (idx + 1) % roles.length;
+                setTimeout(typeWriter, 280);
+            }
+        }
+        typeWriter();
+
+        // Lenis smooth scroll
+        const lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // GSAP scroll animations - advanced staggered
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.glass-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' },
+                opacity: 0,
+                y: 50,
+                duration: 0.7,
+                delay: i * 0.05,
+                ease: 'back.out(0.7)'
+            });
+        });
+
+        // Dark mode toggle
+        const toggle = document.getElementById('theme-toggle');
+        const mobileToggle = document.getElementById('mobile-theme-toggle');
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+        toggle?.addEventListener('click', toggleTheme);
+        mobileToggle?.addEventListener('click', toggleTheme);
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+
+        // Mobile menu
+        const mobileBtn = document.getElementById('mobile-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 30) nav.classList.add('bg-black/70', 'backdrop-blur-md');
+            else nav.classList.remove('bg-black/70', 'backdrop-blur-md');
+        });
+
+        // Background particles (Canvas)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        for (let i = 0; i < 180; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 2 + 1,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4
+            });
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.35)';
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        drawParticles();
+    </script>
+</body>
+</html>
